@@ -6,6 +6,7 @@ public class Conexao {
     private static final String URL = "jdbc:mysql://localhost:3306/controle_epi";
     private static final String USUARIO = "root";
     private static final String SENHA = "";
+
     public static Connection conectar() {
         try {
             return DriverManager.getConnection(URL, USUARIO, SENHA);
