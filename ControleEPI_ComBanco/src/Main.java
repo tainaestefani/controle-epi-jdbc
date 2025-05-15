@@ -1,90 +1,119 @@
+import gerenciadores.*;
+
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
-        EPIDao dao = new EPIDao();
-        Scanner sc = new Scanner(System.in);
-        int opcao;
+    static final Scanner scanner = new Scanner(System.in);
+    static final GerenciadorEpi gerenciadorEpi = new GerenciadorEpi();
+    static final GerenciadorUsuario gerenciadorUsuario = new GerenciadorUsuario();
+    static final GerenciadorEmprestimo gerenciadorEmprestimo = new GerenciadorEmprestimo(gerenciadorUsuario, gerenciadorEpi);
+    static final GerenciadorDevolucao gerenciadorDevolucao = new GerenciadorDevolucao(gerenciadorEmprestimo);
 
-        do {
-            System.out.println("\n===== MENU EPI =====");
-            System.out.println("1 - Cadastrar novo EPI");
-            System.out.println("2 - Listar todos os EPIs");
-            System.out.println("3 - Buscar EPI por ID");
-            System.out.println("4 - Atualizar EPI");
-            System.out.println("5 - Deletar EPI");
-            System.out.println("0 - Sair");
-            System.out.print("Escolha uma opção: ");
-            opcao = sc.nextInt();
-            sc.nextLine();
+    public static void main(String[] args) {
+        processarMenu();
+        scanner.close();
+    }
+
+    private static void processarMenu() {
+        while (true) {
+            int opcao = escolherMenuPrincipal();
+            if (opcao == 0) break;
+
+            processarOpcaoPrincipal(opcao);
+        }
+    }
+
+    private static int escolherMenuPrincipal() {
+        while (true) {
+            try {
+                System.out.println("\n1. CRUD de Usuários\n" +
+                        "2. CRUD de EPIs\n" +
+                        "3. CRUD de Empréstimos\n" +
+                        "4. CRUD de Devoluções\n" +
+                        "0. Sair");
+                System.out.print("Escolha uma opção: ");
+                int opcao = scanner.nextInt();
+                scanner.nextLine();
+                return opcao;
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada inválida! Digite um número inteiro.");
+                scanner.nextLine();
+            }
+        }
+    }
+
+    private static int escolherCRUD() {
+        while (true) {
+            try {
+                System.out.println("\n1. Cadastrar\n" +
+                        "2. Listar\n" +
+                        "3. Atualizar\n" +
+                        "4. Remover\n" +
+                        "5. Voltar");
+                System.out.print("Escolha uma opção: ");
+                int opcao = scanner.nextInt();
+                scanner.nextLine();
+                return opcao;
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada inválida! Digite um número inteiro.");
+                scanner.nextLine();
+            }
+        }
+    }
+
+    private static void processarOpcaoPrincipal(int opcao) {
+        while (true) {
+            int opcaoCRUD = escolherCRUD();
+            if (opcaoCRUD == 5) break;
 
             switch (opcao) {
-                case 1:
-                    System.out.print("Digite o nome do EPI: ");
-                    String nome = sc.nextLine();
-                    System.out.print("Digite a validade do EPI (AAAA-MM-DD): ");
-                    String validade = sc.nextLine();
-                    EPI novo = new EPI(nome, validade);
-                    dao.inserirEPI(novo);
-                    break;
-
-                case 2:
-                    System.out.println("\nLista de EPIs:");
-                    for (EPI epi : dao.listarEPIs()) {
-                        System.out.println("ID: " + epi.getId() +
-                                " | Nome: " + epi.getNome() +
-                                " | Validade: " + epi.getValidade());
-                    }
-                    break;
-
-                case 3:
-                    System.out.print("Digite o ID do EPI a buscar: ");
-                    int idBusca = sc.nextInt();
-                    EPI encontrado = dao.buscarEPIporId(idBusca);
-                    if (encontrado != null) {
-                        System.out.println("EPI encontrado:");
-                        System.out.println("ID: " + encontrado.getId() +
-                                " | Nome: " + encontrado.getNome() +
-                                " | Validade: " + encontrado.getValidade());
-                    } else {
-                        System.out.println("Nenhum EPI encontrado com esse ID.");
-                    }
-                    break;
-
-                case 4:
-                    System.out.print("Digite o ID do EPI a atualizar: ");
-                    int idAtualizar = sc.nextInt();
-                    sc.nextLine();
-                    EPI epiAtualizar = dao.buscarEPIporId(idAtualizar);
-                    if (epiAtualizar != null) {
-                        System.out.print("Digite o novo nome do EPI: ");
-                        String novoNome = sc.nextLine();
-                        System.out.print("Digite a nova validade do EPI (AAAA-MM-DD): ");
-                        String novaValidade = sc.nextLine();
-                        epiAtualizar.setNome(novoNome);
-                        epiAtualizar.setValidade(novaValidade);
-                        dao.atualizarEPI(epiAtualizar);
-                    } else {
-                        System.out.println("EPI não encontrado para atualização.");
-                    }
-                    break;
-
-                case 5:
-                    System.out.print("Digite o ID do EPI a deletar: ");
-                    int idDeletar = sc.nextInt();
-                    dao.deletarEPI(idDeletar);
-                    break;
-
-                case 0:
-                    System.out.println("Saindo do programa...");
-                    break;
-
-                default:
-                    System.out.println("Opção inválida! Tente novamente.");
+                case 1 -> processarCRUDUsuario(opcaoCRUD);
+                case 2 -> processarCRUDEpi(opcaoCRUD);
+                case 3 -> processarCRUDEmprestimo(opcaoCRUD);
+                case 4 -> processarCRUDDevolucao(opcaoCRUD);
+                default -> System.out.println("Opção inválida.");
             }
+        }
+    }
 
-        } while (opcao != 0);
+    private static void processarCRUDUsuario(int opcao) {
+        switch (opcao) {
+            case 1 -> gerenciadorUsuario.cadastrarUsuario();
+            case 2 -> gerenciadorUsuario.listarUsuarios();
+            case 3 -> gerenciadorUsuario.atualizarUsuario();
+            case 4 -> gerenciadorUsuario.removerUsuario();
+            default -> System.out.println("Opção inválida.");
+        }
+    }
 
-        sc.close();
+    private static void processarCRUDEpi(int opcao) {
+        switch (opcao) {
+            case 1 -> gerenciadorEpi.cadastrarEpi();
+            case 2 -> gerenciadorEpi.listarEpis();
+            case 3 -> gerenciadorEpi.atualizarEpi();
+            case 4 -> gerenciadorEpi.removerEpi();
+            default -> System.out.println("Opção inválida.");
+        }
+    }
+
+    private static void processarCRUDEmprestimo(int opcao) {
+        switch (opcao) {
+            case 1 -> gerenciadorEmprestimo.criarEmprestimo();
+            case 2 -> gerenciadorEmprestimo.listarEmprestimos();
+            case 3 -> gerenciadorEmprestimo.atualizarEmprestimo();
+            case 4 -> gerenciadorEmprestimo.removerEmprestimo();
+            default -> System.out.println("Opção inválida.");
+        }
+    }
+
+    private static void processarCRUDDevolucao(int opcao) {
+        switch (opcao) {
+            case 1 -> gerenciadorDevolucao.criarDevolucao();
+            case 2 -> gerenciadorDevolucao.listarDevolucoes();
+            case 3 -> gerenciadorDevolucao.atualizarDevolucao();
+            case 4 -> gerenciadorDevolucao.removerDevolucao();
+            default -> System.out.println("Opção inválida.");
+        }
     }
 }
