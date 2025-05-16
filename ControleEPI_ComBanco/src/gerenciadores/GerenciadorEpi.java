@@ -162,26 +162,28 @@ public class GerenciadorEpi {
         Epi epi = buscarEpi();
         if (epi == null) return;
 
-        String verificaEmprestimoSql = "SELECT COUNT(*) FROM emprestimos WHERE epi_id = ?";
+        String verificaEmprestimoSql = "SELECT COUNT(*) FROM epis WHERE id_epi = ?";
+
         try (Connection conn = Conexao.conectar();
              PreparedStatement stmt = conn.prepareStatement(verificaEmprestimoSql)) {
+
             stmt.setInt(1, epi.getId());
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next() && rs.getInt(1) > 0) {
-                    throw new SQLException("Não é possível remover o EPI, pois ele está sendo utilizado em um ou mais empréstimos.");
+                    throw new SQLException("Não é possível remover o EPI! Ele está sendo utilizado em um ou mais empréstimos.");
                 }
-
-                String sql = "DELETE FROM epis WHERE id_epi = ?";
-                try (PreparedStatement deleteStmt = conn.prepareStatement(sql)) {
-                    deleteStmt.setInt(1, epi.getId());
-                    deleteStmt.executeUpdate();
-                    System.out.println("EPI removido com sucesso!");
-                }
-
             }
+
+            String sql = "DELETE FROM epi WHERE id_epi = ?";
+            try (PreparedStatement deleteStmt = conn.prepareStatement(sql)) {
+                deleteStmt.setInt(1, epi.getId());
+                deleteStmt.executeUpdate();
+                System.out.println("EPI removido com sucesso!");
+            }
+
         } catch (SQLException e) {
-            System.out.println("Erro ao remover EPI: Não é possível remover o EPI, pois ele está sendo utilizado em um ou mais empréstimos.");
+            System.out.println("Erro ao remover EPI: " + e.getMessage());
         }
     }
 

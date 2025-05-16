@@ -34,7 +34,7 @@ public class GerenciadorEmprestimo {
                 System.out.print("Digite a data de devolução prevista (DD/MM/AAAA): ");
                 LocalDate dataDevolucao = buscarData();
 
-                String sql = "INSERT INTO emprestimos (usuario_id, epi_id, data_emprestimo, data_devolucao) VALUES (?, ?, ?, ?)";
+                String sql = "INSERT INTO emprestimos (id_usuario, id_epi, data_emprestimo, data_devolucao) VALUES (?, ?, ?, ?)";
                 try (Connection conn = Conexao.conectar();
                      PreparedStatement stmt = conn.prepareStatement(sql)) {
                     stmt.setInt(1, usuario.getId());
@@ -65,8 +65,8 @@ public class GerenciadorEmprestimo {
             int i = 1;
             while (rs.next()) {
                 int id = rs.getInt("id");
-                int usuarioId = rs.getInt("usuario_id");
-                int epiId = rs.getInt("epi_id");
+                int usuarioId = rs.getInt("id_usuario");
+                int epiId = rs.getInt("id_epi");
                 LocalDate dataEmprestimo = rs.getDate("data_emprestimo").toLocalDate();
                 LocalDate dataDevolucao = rs.getDate("data_devolucao").toLocalDate();
 
