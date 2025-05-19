@@ -153,7 +153,7 @@ public class GerenciadorUsuario {
         Usuario usuario = buscarUsuario();
         if (usuario == null) return;
 
-        String verificaEmprestimoSql = "SELECT COUNT(*) FROM emprestimos WHERE usuario_id = ?";
+        String verificaEmprestimoSql = "SELECT COUNT(*) FROM emprestimos WHERE id_usuario = ?";
 
         try (Connection conn = Conexao.conectar();
              PreparedStatement stmt = conn.prepareStatement(verificaEmprestimoSql)) {
