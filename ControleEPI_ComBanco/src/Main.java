@@ -43,7 +43,7 @@ public class Main {
         }
     }
 
-    private static int escolherCRUD() {
+    private static int escolherCRUDCompleto() {
         while (true) {
             try {
                 System.out.println("\n1. Cadastrar\n" +
@@ -62,10 +62,37 @@ public class Main {
         }
     }
 
+    private static int escolherCRUDSimples() {
+        while (true) {
+            try {
+                System.out.println("\n1. Cadastrar\n" +
+                        "2. Listar\n" +
+                        "3. Voltar");
+                System.out.print("Escolha uma opção: ");
+                int opcao = scanner.nextInt();
+                scanner.nextLine();
+                return opcao;
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada inválida! Digite um número inteiro.");
+                scanner.nextLine();
+            }
+        }
+    }
+
     private static void processarOpcaoPrincipal(int opcao) {
         while (true) {
-            int opcaoCRUD = escolherCRUD();
-            if (opcaoCRUD == 5) break;
+            int opcaoCRUD;
+            int voltar;
+
+            if (opcao == 1 || opcao == 2) {
+                opcaoCRUD = escolherCRUDCompleto();
+                voltar = 5;
+            } else {
+                opcaoCRUD = escolherCRUDSimples();
+                voltar = 3;
+            }
+
+            if (opcaoCRUD == voltar) break;
 
             switch (opcao) {
                 case 1 -> processarCRUDUsuario(opcaoCRUD);
@@ -101,8 +128,6 @@ public class Main {
         switch (opcao) {
             case 1 -> gerenciadorEmprestimo.criarEmprestimo();
             case 2 -> gerenciadorEmprestimo.listarEmprestimos();
-            case 3 -> gerenciadorEmprestimo.atualizarEmprestimo();
-            case 4 -> gerenciadorEmprestimo.removerEmprestimo();
             default -> System.out.println("Opção inválida.");
         }
     }
@@ -111,8 +136,6 @@ public class Main {
         switch (opcao) {
             case 1 -> gerenciadorDevolucao.criarDevolucao();
             case 2 -> gerenciadorDevolucao.listarDevolucoes();
-            case 3 -> gerenciadorDevolucao.atualizarDevolucao();
-            case 4 -> gerenciadorDevolucao.removerDevolucao();
             default -> System.out.println("Opção inválida.");
         }
     }

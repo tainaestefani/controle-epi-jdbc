@@ -16,7 +16,7 @@ public class GerenciadorUsuario {
         String nome = scanner.nextLine();
 
         System.out.print("E-mail: ");
-        String email = scanner.nextLine();
+        String email = scanner.nextLine().toLowerCase();
 
         String sql = "INSERT INTO usuarios (nome, email) VALUES (?, ?)";
 
@@ -125,7 +125,7 @@ public class GerenciadorUsuario {
                     sql = "UPDATE usuarios SET nome = ? WHERE id_usuario = ?";
                 } else if (opcao == 2) {
                     System.out.print("Novo e-mail: ");
-                    usuario.setEmail(scanner.nextLine());
+                    usuario.setEmail(scanner.nextLine().toLowerCase());
                     sql = "UPDATE usuarios SET email = ? WHERE id_usuario = ?";
                 } else {
                     System.out.println("Opção inválida.");

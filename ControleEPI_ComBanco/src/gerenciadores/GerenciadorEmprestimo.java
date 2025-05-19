@@ -159,7 +159,7 @@ public class GerenciadorEmprestimo {
         }
     }
 
-    public void atualizarEmprestimo() {
+    /*public void atualizarEmprestimo() {
         Emprestimo emprestimo = buscarEmprestimo();
         if (emprestimo == null) return;
 
@@ -234,5 +234,5 @@ public class GerenciadorEmprestimo {
         } catch (Exception e) {
             System.out.println("Erro ao remover empréstimo: " + e.getMessage());
         }
-    }
+    }*/
 }

@@ -102,7 +102,7 @@ public class GerenciadorDevolucao {
         }
     }
 
-    public void atualizarDevolucao() {
+    /*public void atualizarDevolucao() {
         Devolucao devolucao = buscarDevolucao();
         while (true) {
             try {
@@ -172,5 +172,5 @@ public class GerenciadorDevolucao {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-    }
+    }*/
 }
